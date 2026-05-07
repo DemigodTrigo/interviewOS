@@ -8,21 +8,17 @@ export async function askInterviewQuestion(role: string) {
       {
         role: "system",
         content: `
-You are a senior technical interviewer.
+            You are an expert FAANG interviewer.
 
-Ask one realistic interview question for the given role.
+            Generate ONE realistic interview question for the role provided.
 
-Rules:
-- Ask only ONE question
-- Keep it concise
-- Mix technical + behavioral
-- Sound like real FAANG interviewer
+            Keep it concise and professional.
         `,
       },
 
       {
         role: "user",
-        content: role,
+        content: `Generate interview question for ${role}`,
       },
     ],
   });
