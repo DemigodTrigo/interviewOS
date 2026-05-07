@@ -72,11 +72,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "InterviewOS" },
+      {
+        name: "description",
+        content: "AI-powered interview preparation and resume optimization platform",
+      },
+      { name: "author", content: "Vishal Verma" },
+      { property: "og:title", content: "InterviewOS" },
+      {
+        property: "og:description",
+        content: "AI interview preparation platform with ATS analysis and mock interviews",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
