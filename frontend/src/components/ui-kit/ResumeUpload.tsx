@@ -1,10 +1,31 @@
 import { UploadCloud, FileText, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { GlassCard } from "./GlassCard";
+import { supabase } from "@/lib/supabase";
 
 export function ResumeUpload() {
   const [file, setFile] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [drag, setDrag] = useState(false);
+
+  const uploadResume = async (selectedFile: File) => {
+    setUploading(true);
+  
+    const fileName = `${Date.now()}-${selectedFile.name}`;
+  
+    const { error } = await supabase.storage
+      .from("resumes")
+      .upload(fileName, selectedFile);
+  
+    setUploading(false);
+  
+    if (error) {
+      alert(error.message);
+    } else {
+      setFile(selectedFile.name);
+      alert("Resume uploaded successfully");
+    }
+  };
 
   return (
     <GlassCard title="Resume Upload" subtitle="PDF or DOCX — analyzed in seconds">
@@ -15,7 +36,7 @@ export function ResumeUpload() {
           e.preventDefault();
           setDrag(false);
           const f = e.dataTransfer.files?.[0];
-          if (f) setFile(f.name);
+          if (f) uploadResume(f);
         }}
         className={
           "relative block rounded-xl border-2 border-dashed p-8 text-center cursor-pointer transition " +
@@ -28,13 +49,23 @@ export function ResumeUpload() {
           type="file"
           accept=".pdf,.doc,.docx"
           className="absolute inset-0 opacity-0 cursor-pointer"
-          onChange={(e) => e.target.files?.[0] && setFile(e.target.files[0].name)}
+          onChange={(e) => {
+            const selectedFile = e.target.files?.[0];
+            if (selectedFile) {
+              uploadResume(selectedFile);
+            }
+          }}
         />
         <div className="size-14 mx-auto rounded-2xl gradient-brand grid place-items-center ring-glow mb-3">
           <UploadCloud className="size-7 text-white" />
         </div>
         <div className="font-medium">Drop your resume here</div>
         <div className="text-xs text-muted-foreground mt-1">or click to browse · max 10MB</div>
+        {uploading && (
+          <div className="mt-3 text-sm text-[oklch(0.78_0.18_270)]">
+            Uploading resume...
+          </div>
+        )}
       </label>
 
       {file && (

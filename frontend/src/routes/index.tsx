@@ -6,6 +6,7 @@ import { AreaChartCard } from "@/components/ui-kit/AreaChartCard";
 import { GlassCard } from "@/components/ui-kit/GlassCard";
 import { ScoreRing } from "@/components/ui-kit/ScoreRing";
 import { AIChat } from "@/components/ui-kit/AIChat";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,9 +19,10 @@ export const Route = createFileRoute("/")({
 });
 
 function Dashboard() {
+  const { user } = useAuth();
   return (
     <PageShell
-      title="Welcome back, Alex"
+      title={`Welcome back, ${user?.email || "User"}`}
       subtitle="Here's how your career engine is running today."
       actions={
         <button className="inline-flex items-center gap-2 px-4 py-2 rounded-xl gradient-brand text-white text-sm font-medium ring-glow hover:opacity-95 transition">

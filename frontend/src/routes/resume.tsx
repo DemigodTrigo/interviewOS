@@ -4,6 +4,8 @@ import { ResumeUpload } from "@/components/ui-kit/ResumeUpload";
 import { GlassCard } from "@/components/ui-kit/GlassCard";
 import { ScoreRing } from "@/components/ui-kit/ScoreRing";
 import { CheckCircle2, AlertTriangle, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/resume")({
   head: () => ({ meta: [{ title: "Resume Analyzer — InterviewOS" }] }),
@@ -11,6 +13,32 @@ export const Route = createFileRoute("/resume")({
 });
 
 function ResumePage() {
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+  
+    if (!file) return;
+  
+    setUploading(true);
+  
+    const fileName = `${Date.now()}-${file.name}`;
+  
+    const { error } = await supabase.storage
+      .from("resumes")
+      .upload(fileName, file);
+  
+    setUploading(false);
+  
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Resume uploaded successfully");
+    }
+  };
+
   return (
     <PageShell title="Resume Analyzer" subtitle="AI-powered ATS scoring and rewrite suggestions.">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

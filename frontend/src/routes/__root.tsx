@@ -1,4 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+import React, { useEffect, useState } from "react";
 import {
   Outlet,
   Link,
@@ -118,7 +120,34 @@ import { AppSidebar } from "@/components/layout/AppSidebar";
 import { TopNavbar } from "@/components/layout/TopNavbar";
 
 function RootComponent() {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      setLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <div className="text-white p-10">Loading...</div>;
+  }
+
+  if (!loading && !user && window.location.pathname !== "/auth") {
+    window.location.href = "/auth";
+    return null;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -134,3 +163,4 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
+
