@@ -1,6 +1,7 @@
+import React, { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import React, { useEffect, useState } from "react";
+
 import {
   Outlet,
   Link,
@@ -12,19 +13,27 @@ import {
 
 import appCss from "../styles.css?url";
 
+import { AppSidebar } from "@/components/layout/AppSidebar";
+import { TopNavbar } from "@/components/layout/TopNavbar";
+
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#050816] text-white px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <h1 className="text-7xl font-bold">404</h1>
+
+        <h2 className="mt-4 text-xl font-semibold">
+          Page not found
+        </h2>
+
+        <p className="mt-2 text-sm text-gray-400">
           The page you're looking for doesn't exist or has been moved.
         </p>
+
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-500"
           >
             Go home
           </Link>
@@ -34,32 +43,43 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({
+  error,
+  reset,
+}: {
+  error: Error;
+  reset: () => void;
+}) {
   console.error(error);
+
   const router = useRouter();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#050816] text-white px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+        <h1 className="text-xl font-semibold tracking-tight">
           This page didn't load
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+
+        <p className="mt-2 text-sm text-gray-400">
+          Something went wrong on our end. You can try refreshing or head back
+          home.
         </p>
+
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-500"
           >
             Try again
           </button>
+
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex items-center justify-center rounded-md border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
           >
             Go home
           </a>
@@ -69,26 +89,29 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "InterviewOS" },
+
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      },
+
+      {
+        title: "InterviewOS",
+      },
+
       {
         name: "description",
-        content: "AI-powered interview preparation and resume optimization platform",
+        content:
+          "AI-powered interview preparation and resume optimization platform",
       },
-      { name: "author", content: "Vishal Verma" },
-      { property: "og:title", content: "InterviewOS" },
-      {
-        property: "og:description",
-        content: "AI interview preparation platform with ATS analysis and mock interviews",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
+
     links: [
       {
         rel: "stylesheet",
@@ -96,34 +119,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
 
-function RootShell({ children }: { children: React.ReactNode }) {
+function RootShell({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
+    <>
+      <HeadContent />
+      {children}
+      <Scripts />
+    </>
   );
 }
-
-import { AppSidebar } from "@/components/layout/AppSidebar";
-import { TopNavbar } from "@/components/layout/TopNavbar";
 
 function RootComponent() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -137,24 +159,56 @@ function RootComponent() {
       setUser(session?.user ?? null);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  if (loading) {
-    return <div className="text-white p-10">Loading...</div>;
-  }
+  useEffect(() => {
+    if (!loading && !user) {
+      router.navigate({
+        to: "/auth",
+      });
+    }
+  }, [loading, user, router]);
 
-  if (!loading && !user && window.location.pathname !== "/auth") {
-    window.location.href = "/auth";
-    return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#050816] text-white">
+        Loading...
+      </div>
+    );
   }
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen relative">
-        <AppSidebar />
-        <div className="lg:pl-64">
-          <TopNavbar />
+      <div className="min-h-screen relative overflow-hidden bg-[#050816] text-white">
+
+        {/* Ambient Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+
+          {/* Purple Glow */}
+          <div className="absolute top-[-200px] left-[-150px] h-[500px] w-[500px] rounded-full bg-purple-500/20 blur-3xl" />
+
+          {/* Cyan Glow */}
+          <div className="absolute bottom-[-250px] right-[-150px] h-[500px] w-[500px] rounded-full bg-cyan-500/20 blur-3xl" />
+
+          {/* Center Gradient */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(120,119,198,0.15),transparent_45%)]" />
+
+          {/* Grid Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:80px_80px]" />
+        </div>
+
+        {user && <AppSidebar />}
+
+        <div
+          className={`relative z-10 ${
+            user ? "lg:pl-64" : ""
+          }`}
+        >
+          {user && <TopNavbar />}
+
           <main className="pb-10">
             <Outlet />
           </main>
@@ -163,4 +217,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-
