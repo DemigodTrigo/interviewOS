@@ -43,14 +43,23 @@ AI-powered interview preparation and career growth platform built with React, Ty
 
 ## 📸 Screenshots
 
+
 ### Dashboard
-(Add dashboard screenshot here)
+<img width="2528" height="1246" alt="image" src="https://github.com/user-attachments/assets/1cbc9e94-64e5-4162-bd44-30385368cf5a" />
+
 
 ### AI Interview
-(Add interview screenshot here)
+<img width="2289" height="1169" alt="image" src="https://github.com/user-attachments/assets/3a2e3fdb-3df9-488b-8ed8-08bee8f61544" />
+
 
 ### Resume Analyzer
-(Add resume analyzer screenshot here)
+<img width="2494" height="1271" alt="image" src="https://github.com/user-attachments/assets/4e496bcd-1519-47c8-b8ea-eaae729fd6fa" />
+
+### Job Tracker
+<img width="2522" height="1146" alt="image" src="https://github.com/user-attachments/assets/b0bc8428-fcd6-4f21-85a0-d17cd6c90fa1" />
+
+### Career Coach
+<img width="2504" height="1278" alt="image" src="https://github.com/user-attachments/assets/4bf5c288-bba2-484b-97c1-8faac8591104" />
 
 ---
 
