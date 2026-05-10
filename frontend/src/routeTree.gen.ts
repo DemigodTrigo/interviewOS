@@ -12,9 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as InterviewRouteImport } from './routes/interview'
+import { Route as HistoryRouteImport } from './routes/history'
 import { Route as CoachRouteImport } from './routes/coach'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InterviewDetailsIdRouteImport } from './routes/interview-details.$id'
 
 const ResumeRoute = ResumeRouteImport.update({
   id: '/resume',
@@ -29,6 +31,11 @@ const JobsRoute = JobsRouteImport.update({
 const InterviewRoute = InterviewRouteImport.update({
   id: '/interview',
   path: '/interview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoachRoute = CoachRouteImport.update({
@@ -46,47 +53,85 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InterviewDetailsIdRoute = InterviewDetailsIdRouteImport.update({
+  id: '/interview-details/$id',
+  path: '/interview-details/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/coach': typeof CoachRoute
+  '/history': typeof HistoryRoute
   '/interview': typeof InterviewRoute
   '/jobs': typeof JobsRoute
   '/resume': typeof ResumeRoute
+  '/interview-details/$id': typeof InterviewDetailsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/coach': typeof CoachRoute
+  '/history': typeof HistoryRoute
   '/interview': typeof InterviewRoute
   '/jobs': typeof JobsRoute
   '/resume': typeof ResumeRoute
+  '/interview-details/$id': typeof InterviewDetailsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/coach': typeof CoachRoute
+  '/history': typeof HistoryRoute
   '/interview': typeof InterviewRoute
   '/jobs': typeof JobsRoute
   '/resume': typeof ResumeRoute
+  '/interview-details/$id': typeof InterviewDetailsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/coach' | '/interview' | '/jobs' | '/resume'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/coach'
+    | '/history'
+    | '/interview'
+    | '/jobs'
+    | '/resume'
+    | '/interview-details/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/coach' | '/interview' | '/jobs' | '/resume'
-  id: '__root__' | '/' | '/auth' | '/coach' | '/interview' | '/jobs' | '/resume'
+  to:
+    | '/'
+    | '/auth'
+    | '/coach'
+    | '/history'
+    | '/interview'
+    | '/jobs'
+    | '/resume'
+    | '/interview-details/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/coach'
+    | '/history'
+    | '/interview'
+    | '/jobs'
+    | '/resume'
+    | '/interview-details/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   CoachRoute: typeof CoachRoute
+  HistoryRoute: typeof HistoryRoute
   InterviewRoute: typeof InterviewRoute
   JobsRoute: typeof JobsRoute
   ResumeRoute: typeof ResumeRoute
+  InterviewDetailsIdRoute: typeof InterviewDetailsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -112,6 +157,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InterviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/coach': {
       id: '/coach'
       path: '/coach'
@@ -133,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/interview-details/$id': {
+      id: '/interview-details/$id'
+      path: '/interview-details/$id'
+      fullPath: '/interview-details/$id'
+      preLoaderRoute: typeof InterviewDetailsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -140,9 +199,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   CoachRoute: CoachRoute,
+  HistoryRoute: HistoryRoute,
   InterviewRoute: InterviewRoute,
   JobsRoute: JobsRoute,
   ResumeRoute: ResumeRoute,
+  InterviewDetailsIdRoute: InterviewDetailsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
